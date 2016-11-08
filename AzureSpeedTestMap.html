@@ -8,9 +8,10 @@
 		<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?sensor=false"></script>
 		<title>Azure Speed Test - Locations</title>
 		<style>
-			.container {
-				width:970px;
-				margin-bottom: 10px;
+			#map {
+				position:absolute;
+				width:100%;
+				height: : 10px;
 			}
 			#map_canvas {
         		height: 700px;
@@ -40,13 +41,9 @@
 		</style>
 	</head>
 	<body>
-		<div class="container" style="background:whitesmoke;">
-			<div><a href="http://www.two10degrees.com/"><img src="//two10degrees.blob.core.windows.net/two10degrees.png" class="pull-right"/></a></div>
-			<h1 style="color:grey;font-size:50px">Windows Azure Speed Test</h1>
-		</div>
-		<div class="container map">
+
 			<div id="map_canvas"></div>
-		</div>
+
 		<div class="container">
 			<p><strong>Add your result to the map by trying <a href="http://azurespeedtest.azurewebsites.net/">the Windows Azure Speed Test</a> and then tweeting about it</strong></p>
 			<p>Created by <a href="https://www.twitter.com/elneilios/">@elneilios</a> at <a href="https://www.twitter.com/two10degrees/">@two10degrees</a>.</p>
@@ -64,21 +61,30 @@
 	var map;
 	var mapData = [];
 	var geocoder =  new google.maps.Geocoder();
-	var colours = {
-	"West Europe": "#A200FF",
-	"Souteast Asia" : "#E51400",
-	"Southeast Asia" : "#E51400",
-	"East Asia": "#1BA1E2",
-	"North Central US": "#00ABA9",
-	"North Europe": "#8CBF26",
-	"South Central US": "#A05000",
-	"West US": "#E671B8",
-	"East US": "#F09609"
-	};
+	var colours = {"West Europe": "#7883c7",
+	       "Southeast Asia":  "#7ce051",
+	       "East Asia":  "#7148ce",
+	       "North Central US": "#d2ce49",
+	       "North Europe": "#cd58c7",
+	       "South Central US": "#6dad4a",
+	       "West US": "#57307d",
+	       "East US": "#76dfa6",
+	       "Japan East": "#c3487e",
+	       "Japan West": "#46692c",
+	       "Brazil South": "#d5493d",
+	       "Central US": "#81c1d2",
+	       "East US 2":  "#d88941",
+	       "Australia Southeast": "#432c49",
+	       "Australia East": "#cfcc9b",
+	       "West UK":  "#7b3731",
+	       "South UK":  "#619780",
+	       "Canada Central": "#cf9aae",
+	       "Canada East":  "#3f4940"}
+
 
 	$().ready(function(){
 
-		if(!map){		
+		if(!map){
 			var map_canvas = document.getElementById('map_canvas');
 			var mapOptions = {
 				center: new google.maps.LatLng(0, 0),

@@ -6,9 +6,8 @@ var _ = require("underscore");
 var mapquest = require("mapquest");
 
 var app = express();
-var port = process.env.PORT || 8080;
 app.use(express.bodyParser());
-app.listen(port);
+app.listen(process.env.PORT || 8080);
 
 var twitterToken;
 
@@ -18,16 +17,26 @@ var STATE = {
 	tweets: []
 };
 
-var dcs = [
-	"West Europe",
-	"Souteast Asia",
-	"East Asia",
-	"North Central US",
-	"North Europe",
-	"South Central US",
-	"West US",
-	"East US"
-	];
+var dcs = ["West Europe",
+       "Southeast Asia",
+       "East Asia",
+       "North Central US",
+       "North Europe",
+       "South Central US",
+       "West US",
+       "East US",
+       "Japan East",
+       "Japan West",
+       "Brazil South",
+       "Central US",
+       "East US 2",
+       "Australia Southeast",
+       "Australia East",
+       "West UK",
+       "South UK",
+       "Canada Central",
+       "Canada East"];
+
 
 app.get('/', function(req, res){
 	res.sendfile(__dirname + '/AzureSpeedTestMap.html');
@@ -107,7 +116,7 @@ geocodeMapQuest = function(tweet){
 geocodeGoogle = function(tweet, i){
 	var options = {
 		host:'maps.googleapis.com',
-		path:'/maps/api/geocode/json?sensor=false&address=' + encodeURI(tweet.addr),		
+		path:'/maps/api/geocode/json?sensor=false&address=' + encodeURI(tweet.addr),
 	};
 
 	http.get(options, function(res){
@@ -163,9 +172,7 @@ onGetToken = function(res){
 
 getTweets = function(){
 	rawTweets = "";
-	var query_string = STATE.refresh_url == undefined ?
-		'?q=%23AzureSpeedTest&count=100&result_type=recent' :
-		STATE.refresh_url;
+	var query_string = STATE.refresh_url == undefined ? '?q=%23AzureSpeedTest&result_type=recent' : STATE.refresh_url;
 
 	console.log("query_string: " + query_string);
 
@@ -182,7 +189,7 @@ getTweets = function(){
 		var rawTweets = "";
 		res.on('data', function(chunk){
 			rawTweets += chunk.toString('utf-8');
-		});	
+		});
 		res.on('end', function(){
 			var tweets = JSON.parse(rawTweets);
 			console.log(tweets);
@@ -190,15 +197,17 @@ getTweets = function(){
 			STATE.tweets = parseTweets(tweets).concat(STATE.tweets); // put new tweets at the top
 
 			// Limit to the latest 1000 tweets
+			/*
 			if(STATE.tweets.length > 1000){
 				STATE.tweets.splice(1000, STATE.tweets.length - 1000);
 			}
+			*/
 
 			console.log("Loaded " + STATE.tweets.length + " tweets");
 			geocodeAddresses(0);
 
 			STATE.refresh_url = tweets.search_metadata.refresh_url;
-		})	
+		})
 	}).on('error', function(e){
 		console.log("getTweets Error: " + e.message);
 	});
@@ -226,5 +235,3 @@ loadSTATE = function(){
 loadSTATE();
 setInterval(saveSTATE, 10000);
 getToken(new Buffer(encodeURI('f8enoi8BcChm2rfEzFiUJQ') + ':' + encodeURI('MG0eCiSJAlcsrp68Xinm7xqhXuMWqF1SVXJBYV4g4Q')).toString('base64'));
-
-
